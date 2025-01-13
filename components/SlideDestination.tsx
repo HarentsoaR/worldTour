@@ -1,11 +1,12 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 
 interface SlideItem {
   id: number;
   name: string;
+  country: string;
   description: string;
   imageUrl: string;
 }
@@ -15,7 +16,7 @@ interface SlideProps {
   title: string;
 }
 
-export function Slide({ items, title }: SlideProps) {
+export function SlideDestination({ items, title }: SlideProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -39,9 +40,9 @@ export function Slide({ items, title }: SlideProps) {
   };
 
   return (
-    <div className="relative w-full max-w-5xl mx-auto overflow-hidden">
-      <h2 className="text-3xl font-bold text-center mb-6">{title}</h2>
-      <div className="relative h-96">
+    <div className="relative w-full max-w-6xl mx-auto overflow-hidden bg-gray-100 rounded-xl shadow-lg">
+      <h2 className="text-3xl font-bold text-center my-6 text-gray-800">{title}</h2>
+      <div className="relative h-[500px]">
         {items.map((item, index) => (
           <div
             key={item.id}
@@ -49,16 +50,24 @@ export function Slide({ items, title }: SlideProps) {
               index === currentIndex ? 'opacity-100' : 'opacity-0'
             }`}
           >
-            <Image
-              src={item.imageUrl}
-              alt={item.name}
-              layout="fill"
-              objectFit="cover"
-              className="rounded-lg"
-            />
-            <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-4 rounded-b-lg">
-              <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
-              <p className="text-sm">{item.description}</p>
+            <div className="relative h-full">
+              <Image
+                src={item.imageUrl || '/Hotel.jpg'}
+                alt={item.name}
+                layout="fill"
+                objectFit="cover"
+                className="rounded-t-lg"
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white p-6 rounded-b-lg">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="text-2xl font-semibold">{item.name}</h3>
+                  <div className="flex items-center">
+                    <MapPin className="w-5 h-5 mr-2" />
+                    <span className="text-lg">{item.country}</span>
+                  </div>
+                </div>
+                <p className="text-sm mb-4">{item.description}</p>
+              </div>
             </div>
           </div>
         ))}
@@ -82,8 +91,8 @@ export function Slide({ items, title }: SlideProps) {
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`w-3 h-3 rounded-full ${
-              index === currentIndex ? 'bg-white' : 'bg-white bg-opacity-50'
+            className={`w-3 h-3 rounded-full transition-all ${
+              index === currentIndex ? 'bg-white scale-125' : 'bg-white bg-opacity-50 hover:bg-opacity-75'
             }`}
             aria-label={`Go to slide ${index + 1}`}
           />

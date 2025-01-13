@@ -1,4 +1,3 @@
-'use client';
 import React from 'react';
 import Image from 'next/image';
 import { Clock, Users, Star } from 'lucide-react';
@@ -76,4 +75,6 @@ export function FeaturedTourPackages() {
     </section>
   );
 }
+
+export default FeaturedTourPackages;
 

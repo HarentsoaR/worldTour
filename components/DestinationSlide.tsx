@@ -1,34 +1,41 @@
-import React from 'react';
-import { Slide } from './Slide';
+'use client'
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../utils/supabase';
+import { SlideDestination } from './SlideDestination';
 
-const destinations = [
-  {
-    id: 1,
-    name: "Paris, France",
-    description: "The City of Light, known for its iconic Eiffel Tower, world-class cuisine, and romantic atmosphere.",
-    imageUrl: "/placeholder.svg?height=400&width=600"
-  },
-  {
-    id: 2,
-    name: "Bali, Indonesia",
-    description: "Tropical paradise with beautiful beaches, lush rice terraces, and vibrant cultural experiences.",
-    imageUrl: "/placeholder.svg?height=400&width=600"
-  },
-  {
-    id: 3,
-    name: "New York City, USA",
-    description: "The Big Apple offers world-famous landmarks, diverse neighborhoods, and endless entertainment.",
-    imageUrl: "/placeholder.svg?height=400&width=600"
-  },
-  {
-    id: 4,
-    name: "Kyoto, Japan",
-    description: "Ancient capital showcasing traditional Japanese culture, beautiful temples, and serene gardens.",
-    imageUrl: "/placeholder.svg?height=400&width=600"
-  },
-];
-
-export function DestinationSlide() {
-  return <Slide items={destinations} title="Popular Destinations" />;
+interface Destination {
+  id: number;
+  name: string;
+  description: string;
+  imageUrl: string;
+  address: string;
+  city: string;
+  postal_code: string;
+  phone: string;
+  email: string;
+  website: string;
 }
 
+export function DestinationSlide() {
+  const [destinations, setDestinations] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchDestinations = async () => {
+      const { data, error } = await supabase
+        .from('destination')
+        .select('*');
+
+      if (error) {
+        console.error('Error fetching destinations:', error);
+      } else {
+        setDestinations(data);
+      }
+    };
+
+    fetchDestinations();
+  }, []);
+
+  return <SlideDestination items={destinations} title="Popular Destinations" />;
+}
+
+export default DestinationSlide;

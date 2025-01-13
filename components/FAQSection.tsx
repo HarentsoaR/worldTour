@@ -16,7 +16,7 @@ const faqs = [
   },
   {
     question: 'How often is new content added?',
-    answer: 'We add new destinations and update existing tours regularly. On average, we introduce new content weekly, ensuring there s always something new to explore.',
+    answer: 'We add new destinations and update existing tours regularly. On average, we introduce new content weekly, ensuring there\'s always something new to explore.',
   },
 ];
 
@@ -57,4 +57,6 @@ export function FAQSection() {
     </section>
   );
 }
+
+export default FAQSection;
 

@@ -1,34 +1,27 @@
-import React from 'react';
-import { Slide } from './Slide';
-
-const hotels = [
-  {
-    id: 1,
-    name: "Seaside Resort & Spa",
-    description: "Luxurious beachfront resort with stunning ocean views and world-class amenities.",
-    imageUrl: "/placeholder.svg?height=400&width=600"
-  },
-  {
-    id: 2,
-    name: "Mountain Lodge Retreat",
-    description: "Cozy mountain getaway surrounded by nature, perfect for outdoor enthusiasts.",
-    imageUrl: "/placeholder.svg?height=400&width=600"
-  },
-  {
-    id: 3,
-    name: "City Center Suites",
-    description: "Modern accommodations in the heart of the city, close to major attractions and nightlife.",
-    imageUrl: "/placeholder.svg?height=400&width=600"
-  },
-  {
-    id: 4,
-    name: "Historic Grand Hotel",
-    description: "Elegant 19th-century hotel offering a blend of classic charm and modern comfort.",
-    imageUrl: "/placeholder.svg?height=400&width=600"
-  },
-];
+import React, { useState, useEffect } from 'react';
+import { SlideHotel } from './SlideHotel';
+import { supabase } from '../utils/supabase';
 
 export function HotelSlide() {
-  return <Slide items={hotels} title="Featured Hotels" />;
+  const [hotels, setHotels] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchHotels = async () => {
+      const { data, error } = await supabase
+        .from('hotel')
+        .select('*');
+
+      if (error) {
+        console.error('Error fetching hotels:', error);
+      } else {
+        setHotels(data);
+      }
+    };
+
+    fetchHotels();
+  }, []);
+
+  return <SlideHotel items={hotels} title="Featured Hotels" />;
 }
 
+export default HotelSlide;
