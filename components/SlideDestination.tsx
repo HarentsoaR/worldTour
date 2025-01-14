@@ -8,7 +8,7 @@ interface SlideItem {
   name: string;
   country: string;
   description: string;
-  imageUrl: string;
+  imageurl: string;
 }
 
 interface SlideProps {
@@ -52,7 +52,7 @@ export function SlideDestination({ items, title }: SlideProps) {
           >
             <div className="relative h-full">
               <Image
-                src={item.imageUrl || '/Hotel.jpg'}
+                src={item.imageurl || '/Hotel.jpg'}
                 alt={item.name}
                 layout="fill"
                 objectFit="cover"

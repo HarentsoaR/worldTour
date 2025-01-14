@@ -7,6 +7,7 @@ import { ThemeProvider } from "next-themes";
 import Link from "next/link";
 import { GlobeIcon, MapIcon, HotelIcon } from 'lucide-react';
 import "./globals.css";
+import { Navigation } from "@/components/Navigation";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -38,31 +39,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <main className="min-h-screen flex flex-col">
-            <nav className="bg-white shadow-md">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between h-16">
-                  <div className="flex items-center">
-                    <Link href="/" className="flex items-center">
-                      <GlobeIcon className="h-8 w-8 text-blue-600 mr-2" />
-                      <span className="font-bold text-xl text-blue-600">World Tour</span>
-                    </Link>
-                  </div>
-                  <div className="flex items-center">
-                    <Link href="/destinations" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
-                      Destinations
-                    </Link>
-                    <Link href="/attractions" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
-                      Attractions
-                    </Link>
-                    <Link href="/hotels" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
-                      Hotels
-                    </Link>
-                    {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
-                  </div>
-                </div>
-              </div>
-            </nav>
-
+            <Navigation />
             <div className="flex-grow">
               {children}
             </div>

@@ -7,7 +7,7 @@ interface SlideItem {
   id: number;
   name: string;
   description: string;
-  imageUrl: string;
+  img_src: string;
   address: string;
   city: string;
   postal_code: string;
@@ -58,7 +58,7 @@ export function SlideHotel({ items, title }: SlideProps) {
           >
             <div className="relative h-full">
               <Image
-                src={item.imageUrl || '/Hotel.jpg'}
+                src={item.img_src || '/Hotel.jpg'}
                 alt={item.name}
                 layout="fill"
                 objectFit="cover"

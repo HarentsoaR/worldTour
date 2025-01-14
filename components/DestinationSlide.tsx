@@ -7,7 +7,7 @@ interface Destination {
   id: number;
   name: string;
   description: string;
-  imageUrl: string;
+  imageurl: string;
   address: string;
   city: string;
   postal_code: string;
