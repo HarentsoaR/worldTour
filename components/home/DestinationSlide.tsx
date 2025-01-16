@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../utils/supabase';
+import { supabase } from '../../utils/supabase';
 import { SlideDestination } from './SlideDestination';
 
 interface Destination {

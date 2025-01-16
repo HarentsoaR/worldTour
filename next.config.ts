@@ -81,11 +81,6 @@ const config: NextConfig = {
       {
         protocol: 'https',
         hostname: 'cdn.futura-sciences.com',
-        pathname: '/sources/images/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'cdn.futura-sciences.com',
         pathname: '/sources/**',
       },
       {
@@ -162,6 +157,31 @@ const config: NextConfig = {
         protocol: 'https',
         hostname: 'www.ateliersduvoyage.com',
         pathname: '/wp-content/uploads/2019/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.eurail.com',
+        pathname: '/content/dam/_new-structure/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'img.freepik.com',
+        pathname: '/premium-vector/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.oneworld365.org',
+        pathname: '/img/000/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+        pathname: '/wikipedia/commons/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cf.bstatic.com',
+        pathname: '/xdata/images/hotel/**',
       },
     ],
   },

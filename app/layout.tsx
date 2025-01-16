@@ -7,7 +7,7 @@ import { ThemeProvider } from "next-themes";
 import Link from "next/link";
 import { GlobeIcon, MapIcon, HotelIcon } from 'lucide-react';
 import "./globals.css";
-import { Navigation } from "@/components/Navigation";
+import { Navigation } from "@/components/home/Navigation";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`

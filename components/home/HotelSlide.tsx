@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SlideHotel } from './SlideHotel';
-import { supabase } from '../utils/supabase';
+import { supabase } from '../../utils/supabase';
 
 export function HotelSlide() {
   const [hotels, setHotels] = useState<any[]>([]);
