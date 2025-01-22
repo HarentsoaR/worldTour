@@ -11,7 +11,7 @@ export default function HotelsPage() {
       <HotelsHero />
       <div className="container mx-auto px-4 py-12">
         <HotelSearch />
-        <FeaturedHotels hotels={hotels.slice(0, 4)} />
+        <FeaturedHotels />
         <PopularDestinations />
         <HotelDeals hotels={hotels.slice(4, 7)} />
       </div>
