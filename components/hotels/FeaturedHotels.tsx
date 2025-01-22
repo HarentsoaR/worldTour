@@ -1,17 +1,28 @@
 'use client'
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import HotelCard from './HotelCard';
 import { Hotel } from '@/types/hotel';
+import { fetchHotels } from '@/data/api/hotel'; // Adjust the import path as necessary
 
-interface FeaturedHotelsProps {
-  hotels: Hotel[];
-}
-
-export default function FeaturedHotels({ hotels }: FeaturedHotelsProps) {
+export default function FeaturedHotels() {
+  const [hotels, setHotels] = useState<Hotel[]>([]);
   const [starFilter, setStarFilter] = useState<number | null>(null);
   const [priceFilter, setPriceFilter] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadHotels = async () => {
+      try {
+        const data = await fetchHotels();
+        setHotels(data);
+      } catch (error) {
+        console.error('Failed to fetch hotels:', error.message);
+      }
+    };
+
+    loadHotels();
+  }, []);
 
   const filteredHotels = hotels.filter(hotel => {
     if (starFilter && hotel.stars !== starFilter) return false;
@@ -75,4 +86,3 @@ export default function FeaturedHotels({ hotels }: FeaturedHotelsProps) {
     </section>
   );
 }
-

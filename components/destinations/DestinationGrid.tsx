@@ -1,18 +1,38 @@
 'use client'
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import DestinationCard from './DestinationCard';
 import { Destination } from '@/types/destination';
+import { fetchDestinations } from '@/data/api/destination'; // Adjust the import path as necessary
 
-
-interface DestinationGridProps {
-  destinations: Destination[];
+interface DestinationCardProps {
+  destination: Destination
 }
 
-export default function DestinationGrid({ destinations }: DestinationGridProps) {
+export default function DestinationGrid({ destination }: DestinationCardProps) {
+  const [destinations, setDestinations] = useState<Destination[]>([]);
   const [filter, setFilter] = useState('all');
   const [view, setView] = useState('grid');
+
+  useEffect(() => {
+    const loadDestinations = async () => {
+      try {
+        const data = await fetchDestinations();
+        console.log(data)
+        setDestinations(data);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error('Failed to fetch destinations:', error.message);
+        } else {
+          console.error('Failed to fetch destinations:', error);
+        }
+      }
+    };
+
+    // Fetch destinations when the component mounts
+    loadDestinations();
+  }, []);
 
   const filteredDestinations = destinations.filter(dest => 
     filter === 'all' || dest.type === filter
@@ -82,4 +102,3 @@ export default function DestinationGrid({ destinations }: DestinationGridProps) 
     </div>
   );
 }
-

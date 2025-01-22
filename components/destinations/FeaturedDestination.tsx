@@ -22,7 +22,7 @@ export default function FeaturedDestinations({ destinations }: FeaturedDestinati
             transition={{ duration: 0.5, delay: index * 0.2 }}
           >
             <Image 
-              src={destination.image || "/placeholder.svg"} 
+              src={destination.imageurl || "/placeholder.svg"} 
               alt={destination.name}
               layout="fill"
               objectFit="cover"
