@@ -17,7 +17,7 @@ export default function FeaturedHotels() {
         const data = await fetchHotels();
         setHotels(data);
       } catch (error) {
-        console.error('Failed to fetch hotels:', error.message);
+        console.error('Failed to fetch hotels:', error);
       }
     };
 
