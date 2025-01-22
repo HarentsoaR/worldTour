@@ -1,19 +1,43 @@
 'use client'
 
+import { useEffect, useState } from 'react';
 import { Destination } from '@/types/destination';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { fetchDestinations } from '@/data/api/destination'; // Adjust the import path as necessary
 
-interface FeaturedDestinationsProps {
-  destinations: Destination[];
-}
+export default function FeaturedDestinations() {
+  const [destinations, setDestinations] = useState<Destination[]>([]);
+  const [loading, setLoading] = useState(true); // Loading state
 
-export default function FeaturedDestinations({ destinations }: FeaturedDestinationsProps) {
+  useEffect(() => {
+    const loadDestinations = async () => {
+      try {
+        const data = await fetchDestinations();
+        setDestinations(data);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error('Failed to fetch destinations:', error.message);
+        } else {
+          console.error('Failed to fetch destinations:', error);
+        }
+      } finally {
+        setLoading(false); // Set loading to false after fetching
+      }
+    };
+
+    loadDestinations(); // Fetch destinations when the component mounts
+  }, []);
+
+  if (loading) {
+    return <div>Loading featured destinations...</div>; // Loading indicator
+  }
+
   return (
     <div className="mb-12">
       <h2 className="text-3xl font-bold mb-6">Featured Destinations</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {destinations.map((destination, index) => (
+        {destinations.slice(0, 3).map((destination, index) => ( // Display only the first 3 destinations
           <motion.div 
             key={destination.id}
             className="relative h-64 rounded-lg overflow-hidden"
@@ -39,4 +63,3 @@ export default function FeaturedDestinations({ destinations }: FeaturedDestinati
     </div>
   );
 }
-

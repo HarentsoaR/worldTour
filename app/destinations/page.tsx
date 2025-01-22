@@ -5,7 +5,7 @@ import DestinationGrid from "@/components/destinations/DestinationGrid"
 import DestinationsHero from "@/components/destinations/DestinationHero"
 import FeaturedDestinations from "@/components/destinations/FeaturedDestination"
 import SearchResults from "@/components/destinations/SearchResults"
-import { destinations } from "@/data/destination"
+// import { destinations } from "@/data/destination"
 import type { Destination } from "@/types/destination"
 
 export default function DestinationsPage() {
@@ -31,7 +31,7 @@ export default function DestinationsPage() {
           <SearchResults results={searchResults} onClearSearch={clearSearch} />
         ) : (
           <>
-            <FeaturedDestinations destinations={destinations.slice(0, 3) as Destination[]} />
+            <FeaturedDestinations/>
             <DestinationGrid />
           </>
         )}
