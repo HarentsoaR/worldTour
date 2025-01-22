@@ -6,20 +6,16 @@ import DestinationCard from './DestinationCard';
 import { Destination } from '@/types/destination';
 import { fetchDestinations } from '@/data/api/destination'; // Adjust the import path as necessary
 
-interface DestinationCardProps {
-  destination: Destination
-}
-
-export default function DestinationGrid({ destination }: DestinationCardProps) {
+export default function DestinationGrid() {
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [filter, setFilter] = useState('all');
   const [view, setView] = useState('grid');
+  const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
     const loadDestinations = async () => {
       try {
         const data = await fetchDestinations();
-        console.log(data)
         setDestinations(data);
       } catch (error) {
         if (error instanceof Error) {
@@ -27,16 +23,21 @@ export default function DestinationGrid({ destination }: DestinationCardProps) {
         } else {
           console.error('Failed to fetch destinations:', error);
         }
+      } finally {
+        setLoading(false); // Set loading to false after fetching
       }
     };
 
-    // Fetch destinations when the component mounts
-    loadDestinations();
+    loadDestinations(); // Fetch destinations when the component mounts
   }, []);
 
   const filteredDestinations = destinations.filter(dest => 
     filter === 'all' || dest.type === filter
   );
+
+  if (loading) {
+    return <div>Loading destinations...</div>; // Loading indicator
+  }
 
   return (
     <div className="mt-12">
@@ -96,7 +97,7 @@ export default function DestinationGrid({ destination }: DestinationCardProps) {
         </motion.div>
       ) : (
         <div className="h-[600px] bg-gray-200 rounded-lg flex items-center justify-center">
-          <p className="text-2xl text-gray-600">Map View Coming Soon</p>
+          <p className="text-gray-500">Map view is not implemented yet.</p>
         </div>
       )}
     </div>

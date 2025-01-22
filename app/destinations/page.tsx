@@ -32,7 +32,7 @@ export default function DestinationsPage() {
         ) : (
           <>
             <FeaturedDestinations destinations={destinations.slice(0, 3) as Destination[]} />
-            <DestinationGrid destinations={destinations as Destination[]} />
+            <DestinationGrid />
           </>
         )}
       </div>
