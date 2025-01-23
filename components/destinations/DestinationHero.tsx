@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useEffect, useRef } from "react"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { Search } from "lucide-react"
 import { handleSearch } from "@/data/api/destination"
 import type { Destination } from "@/types/destination"
@@ -16,7 +16,9 @@ interface DestinationsHeroProps {
 export default function DestinationsHero({ onSearch }: DestinationsHeroProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [currentVideo, setCurrentVideo] = useState(videoSources[0])
+  const [nextVideo, setNextVideo] = useState("")
   const videoRef = useRef<HTMLVideoElement>(null)
+  const nextVideoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     setCurrentVideo(videoSources[Math.floor(Math.random() * videoSources.length)])
@@ -32,8 +34,17 @@ export default function DestinationsHero({ onSearch }: DestinationsHeroProps) {
   }, [currentVideo])
 
   const handleVideoEnd = () => {
-    const nextVideoIndex = (videoSources.indexOf(currentVideo) + 1) % videoSources.length
-    setCurrentVideo(videoSources[nextVideoIndex])
+    let nextVideoIndex
+    do {
+      nextVideoIndex = Math.floor(Math.random() * videoSources.length)
+    } while (videoSources[nextVideoIndex] === currentVideo)
+
+    setNextVideo(videoSources[nextVideoIndex])
+  }
+
+  const handleNextVideoLoad = () => {
+    setCurrentVideo(nextVideo)
+    setNextVideo("")
   }
 
   const handleSearchSubmit = async (e: React.FormEvent) => {
@@ -50,19 +61,30 @@ export default function DestinationsHero({ onSearch }: DestinationsHeroProps) {
 
   return (
     <div className="relative w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-screen overflow-hidden">
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        playsInline
-        className="absolute z-10 w-full h-full object-cover"
-        onEnded={handleVideoEnd}
-        key={currentVideo}
-      >
-        <source src={currentVideo} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-      <div className="absolute z-20 inset-0 bg-black bg-opacity-50"></div>
+      <AnimatePresence>
+        <motion.video
+          key={currentVideo}
+          ref={videoRef}
+          autoPlay
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          onEnded={handleVideoEnd}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <source src={currentVideo} type="video/mp4" />
+          Your browser does not support the video tag.
+        </motion.video>
+      </AnimatePresence>
+      {nextVideo && (
+        <video ref={nextVideoRef} muted playsInline className="hidden" onLoadedData={handleNextVideoLoad}>
+          <source src={nextVideo} type="video/mp4" />
+        </video>
+      )}
+      <div className="absolute inset-0 bg-black bg-opacity-50"></div>
       <motion.div
         className="relative z-30 flex flex-col items-center justify-center h-full text-white text-center px-4 sm:px-6 lg:px-8"
         initial={{ opacity: 0, y: 20 }}
@@ -79,12 +101,14 @@ export default function DestinationsHero({ onSearch }: DestinationsHeroProps) {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="px-4 py-2 w-full text-gray-900 rounded-l-lg focus:outline-none"
           />
-          <button
+          <motion.button
             type="submit"
             className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-r-lg transition duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             <Search className="w-6 h-6" />
-          </button>
+          </motion.button>
         </form>
       </motion.div>
     </div>

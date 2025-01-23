@@ -23,9 +23,14 @@ export default function SearchResults({ results, onClearSearch }: SearchResultsP
     <div className="mt-8">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Search Results</h2>
-        <button onClick={onClearSearch} className="text-blue-600 hover:text-blue-800 transition-colors duration-200">
+        <motion.button
+          onClick={onClearSearch}
+          className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
           Clear Search
-        </button>
+        </motion.button>
       </div>
       <AnimatePresence mode="wait">
         {results.length === 0 ? (
@@ -66,3 +71,4 @@ export default function SearchResults({ results, onClearSearch }: SearchResultsP
     </div>
   )
 }
+
