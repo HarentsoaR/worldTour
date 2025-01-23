@@ -3,7 +3,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 
 const videoSources = [
-  '/bg-video1.mp4'
+  '/bg-video1.mp4',
+  '/bg-video2.mp4',
+  '/bg-video3.mp4',
+  '/bg-video4.mp4',
 ];
 
 export function HeroVideo() {
