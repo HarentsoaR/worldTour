@@ -1,9 +1,7 @@
 import AttractionsHero from '@/components/attractions/AttractionsHero';
 import AttractionSearch from '@/components/attractions/AttractionSearch';
 import FeaturedAttractions from '@/components/attractions/FeaturedAttractions';
-// import PopularCategories from '@/components/attractions/PopularCategories';
 import NearbyAttractions from '@/components/attractions/NearbyAttractions';
-import { attractions } from '@/data/attraction';
 import PopularCategoriesAndAttractions from '@/components/attractions/PopularCategoriesAndAttraction';
 
 export default function AttractionsPage() {
@@ -12,9 +10,9 @@ export default function AttractionsPage() {
       <AttractionsHero />
       <div className="container mx-auto px-4 py-12">
         <AttractionSearch />
-        <FeaturedAttractions attractions={attractions.slice(0, 4)} />
+        <FeaturedAttractions />
         <PopularCategoriesAndAttractions />
-        <NearbyAttractions attractions={attractions.slice(4, 7)} />
+        <NearbyAttractions />
       </div>
     </div>
   );
