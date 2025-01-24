@@ -1,16 +1,20 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Camera, Utensils, Tent, Ticket, Palmtree, Building, TypeIcon as type, type LucideIcon } from "lucide-react"
-import { fetchAttractions } from "@/data/api/attraction"
-import type { Attraction } from "@/types/attraction"
-import { AttractionCard } from "./AttractionCard"
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Camera, Utensils, Tent, Ticket, Palmtree, Building, type LucideIcon } from "lucide-react";
+import { fetchAttractions } from "@/data/api/attraction";
+import type { Attraction } from "@/types/attraction";
+import { AttractionCard } from "./AttractionCard";
+import { Loader } from "@/components/ui/loader"; // Adjust the import based on your loader's path
+import { gsap, ScrollToPlugin } from "gsap/all";
+
+gsap.registerPlugin(ScrollToPlugin);
 
 interface Category {
-  name: string
-  icon: LucideIcon
-  count: number
+  name: string;
+  icon: LucideIcon;
+  count: number;
 }
 
 const iconMap: { [key: string]: LucideIcon } = {
@@ -20,25 +24,28 @@ const iconMap: { [key: string]: LucideIcon } = {
   Events: Ticket,
   Nature: Palmtree,
   Museums: Building,
-}
+};
+
+const ITEMS_PER_PAGE = 6;
 
 export default function PopularCategoriesAndAttractions() {
-  const [categories, setCategories] = useState<Category[]>([])
-  const [attractions, setAttractions] = useState<Attraction[]>([])
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [attractions, setAttractions] = useState<Attraction[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        setLoading(true)
-        const fetchedAttractions = await fetchAttractions()
-        setAttractions(fetchedAttractions)
+        setLoading(true);
+        const fetchedAttractions = await fetchAttractions();
+        setAttractions(fetchedAttractions);
 
-        const categoryCount: { [key: string]: number } = {}
+        const categoryCount: { [key: string]: number } = {};
         fetchedAttractions.forEach((attraction) => {
-          categoryCount[attraction.category] = (categoryCount[attraction.category] || 0) + 1
-        })
+          categoryCount[attraction.category] = (categoryCount[attraction.category] || 0) + 1;
+        });
 
         const sortedCategories = Object.entries(categoryCount)
           .sort((a, b) => b[1] - a[1])
@@ -47,29 +54,59 @@ export default function PopularCategoriesAndAttractions() {
             name,
             icon: iconMap[name] || Building,
             count,
-          }))
+          }));
 
-        setCategories(sortedCategories)
+        setCategories(sortedCategories);
       } catch (error) {
-        console.error("Failed to load data:", error)
+        console.error("Failed to load data:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    loadData()
-  }, [])
+    loadData();
+  }, []);
 
   const filteredAttractions = selectedCategory
     ? attractions.filter((attraction) => attraction.category === selectedCategory)
-    : attractions
+    : attractions;
 
   const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category === selectedCategory ? null : category)
-  }
+    const position = window.innerHeight / 0.5;
+    setSelectedCategory(category === selectedCategory ? null : category);
+    setCurrentPage(0); // Reset to first page
+    gsap.to(window, { scrollTo: { y: position, autoKill: false }, duration: 0.5 }); // Scroll to top
+  };
+
+  const handlePageNext = () => {
+    const newPage = currentPage + 1;
+    if (newPage < Math.ceil(filteredAttractions.length / ITEMS_PER_PAGE)) {
+      setCurrentPage(newPage);
+      const position = window.innerHeight / 0.5;
+      gsap.to(window, { scrollTo: { y: position, autoKill: false }, duration: 0.5 });
+    }
+  };
+
+  const handlePagePrevious = () => {
+    const newPage = currentPage - 1;
+    if (newPage >= 0) {
+      setCurrentPage(newPage);
+      const position = window.innerHeight / 0.5;
+      gsap.to(window, { scrollTo: { y: position, autoKill: false }, duration: 0.5 });
+    }
+  };
+
+  const paginatedAttractions = filteredAttractions.slice(
+    currentPage * ITEMS_PER_PAGE,
+    (currentPage + 1) * ITEMS_PER_PAGE
+  );
 
   if (loading) {
-    return <div className="text-center py-10">Loading...</div>
+    return (
+      <div className="text-center py-10">
+        <Loader className="w-12 h-12 text-blue-600" />
+      </div>
+    );
   }
 
   return (
@@ -78,7 +115,7 @@ export default function PopularCategoriesAndAttractions() {
         <h2 className="text-3xl font-bold mb-6">Popular Categories</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {categories.map((category, index) => {
-            const IconComponent = category.icon
+            const IconComponent = category.icon;
             return (
               <motion.div
                 key={category.name}
@@ -95,7 +132,7 @@ export default function PopularCategoriesAndAttractions() {
                 <h3 className="text-sm font-semibold text-center">{category.name}</h3>
                 <span className="text-xs text-gray-500 mt-1">{category.count} attractions</span>
               </motion.div>
-            )
+            );
           })}
         </div>
       </section>
@@ -114,6 +151,7 @@ export default function PopularCategoriesAndAttractions() {
             </button>
           )}
         </div>
+
         <AnimatePresence>
           <motion.div
             key={selectedCategory || "all"}
@@ -123,7 +161,7 @@ export default function PopularCategoriesAndAttractions() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            {filteredAttractions.map((attraction) => (
+            {paginatedAttractions.map((attraction) => (
               <motion.div
                 key={attraction.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -136,11 +174,32 @@ export default function PopularCategoriesAndAttractions() {
             ))}
           </motion.div>
         </AnimatePresence>
+
         {filteredAttractions.length === 0 && (
           <p className="text-center text-gray-500 mt-8">No attractions found for this category.</p>
         )}
+
+        <div className="flex justify-between mt-4">
+          <button
+            onClick={handlePagePrevious}
+            disabled={currentPage === 0}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md"
+          >
+            Previous
+          </button>
+          <button
+            onClick={handlePageNext}
+            disabled={currentPage >= Math.ceil(filteredAttractions.length / ITEMS_PER_PAGE) - 1}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md"
+          >
+            Next
+          </button>
+        </div>
+
+        <div className="mt-4 text-center">
+          Page {currentPage + 1} of {Math.ceil(filteredAttractions.length / ITEMS_PER_PAGE)}
+        </div>
       </section>
     </div>
-  )
+  );
 }
-

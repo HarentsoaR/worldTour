@@ -1,12 +1,14 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import Image from "next/image"
-import { MapPin, Star, Waves, Mountain, Building, Landmark, Users } from "lucide-react"
-import type { Destination } from "@/types/destination"
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { MapPin, Star, Waves, Mountain, Building, Landmark, Users } from "lucide-react";
+import type { Destination } from "@/types/destination";
+import { Loader } from "@/components/ui/loader"; // Adjust the import based on your loader's path
+import React from "react";
 
 interface DestinationCardProps {
-  destination: Destination
+  destination: Destination;
 }
 
 const typeIcons = {
@@ -15,12 +17,13 @@ const typeIcons = {
   city: Building,
   historic: Landmark,
   cultural: Users,
-}
+};
 
-const DefaultIcon = Building
+const DefaultIcon = Building;
 
 export default function DestinationCard({ destination }: DestinationCardProps) {
-  const TypeIcon = typeIcons[destination.type] || DefaultIcon
+  const TypeIcon = typeIcons[destination.type] || DefaultIcon;
+  const [loading, setLoading] = React.useState(true); // State to manage loading status
 
   return (
     <motion.div
@@ -29,11 +32,17 @@ export default function DestinationCard({ destination }: DestinationCardProps) {
       transition={{ duration: 0.2 }}
     >
       <div className="relative h-48 sm:h-56 md:h-64">
+        {loading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white">
+            <Loader className="w-8 h-8 text-blue-600" /> {/* Loader component */}
+          </div>
+        )}
         <Image
           src={destination.imageurl || "/placeholder.svg"}
           alt={destination.name}
           layout="fill"
           objectFit="cover"
+          onLoadingComplete={() => setLoading(false)} // Set loading to false when the image loads
         />
         <div className="absolute top-2 right-2 bg-white rounded-full p-2">
           {TypeIcon && <TypeIcon className="w-5 h-5 text-blue-600" />}
@@ -63,6 +72,5 @@ export default function DestinationCard({ destination }: DestinationCardProps) {
         </motion.button>
       </div>
     </motion.div>
-  )
+  );
 }
-

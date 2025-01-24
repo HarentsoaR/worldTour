@@ -1,67 +1,97 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import DestinationCard from "./DestinationCard"
-import type { Destination } from "@/types/destination"
-import { fetchDestinations } from "@/data/api/destination"
-import { Loader } from "@/components/ui/loader"
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import DestinationCard from "./DestinationCard";
+import type { Destination } from "@/types/destination";
+import { fetchDestinations } from "@/data/api/destination";
+import { Loader } from "@/components/ui/loader";
+import { gsap, ScrollToPlugin } from "gsap/all";
+
+// Register the plugin
+gsap.registerPlugin(ScrollToPlugin);
 
 export default function DestinationGrid() {
-  const [destinations, setDestinations] = useState<Destination[]>([])
-  const [filter, setFilter] = useState("all")
-  const [view, setView] = useState("grid")
-  const [loading, setLoading] = useState(true)
+  const [destinations, setDestinations] = useState<Destination[]>([]);
+  const [filter, setFilter] = useState("all");
+  const [view, setView] = useState("grid");
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(0);
+  const ITEMS_PER_PAGE = 6;
 
   useEffect(() => {
     const loadDestinations = async () => {
       try {
-        const data = await fetchDestinations()
-        setDestinations(data)
+        const data = await fetchDestinations();
+        setDestinations(data);
       } catch (error) {
-        console.error("Failed to fetch destinations:", error)
+        console.error("Failed to fetch destinations:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
+    };
+
+    loadDestinations();
+  }, []);
+
+  const filteredDestinations = destinations.filter(
+    (dest) => filter === "all" || dest.type.toLowerCase() === filter
+  );
+  const totalPages = Math.ceil(filteredDestinations.length / ITEMS_PER_PAGE);
+
+  const handlePageChange = (newPage: number) => {
+    const position = window.innerHeight / 0.7;
+    gsap.to(window, { scrollTo: { y: position, autoKill: false }, duration: 0.5 }); // Scroll to top
+    setCurrentPage(newPage);
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages - 1) {
+      handlePageChange(currentPage + 1);
     }
+  };
 
-    loadDestinations()
-  }, [])
+  const handlePrevPage = () => {
+    if (currentPage > 0) {
+      handlePageChange(currentPage - 1);
+    }
+  };
 
-  const filteredDestinations = destinations.filter((dest) => filter === "all" || dest.type.toLowerCase() === filter)
+  const handleFilterChange = (newFilter: string) => {
+    setFilter(newFilter);
+    setCurrentPage(0); // Reset to page 1 on filter change
+    const position = window.innerHeight / 0.7;
+    gsap.to(window, { scrollTo: { y: position, autoKill: false }, duration: 0.5 }); // Scroll to top
+  };
 
-  const filterButtons = [
-    { label: "All", value: "all" },
-    { label: "Beaches", value: "beach" },
-    { label: "Mountains", value: "mountain" },
-    { label: "Cities", value: "city" },
-    { label: "Historic", value: "historic" },
-    { label: "Cultural", value: "cultural" },
-  ]
+  const paginatedDestinations = filteredDestinations.slice(
+    currentPage * ITEMS_PER_PAGE,
+    (currentPage + 1) * ITEMS_PER_PAGE
+  );
 
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
         <Loader className="w-12 h-12 text-blue-600" />
       </div>
-    )
+    );
   }
 
   return (
     <div className="mt-12">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
         <div className="flex flex-wrap gap-2 mb-4 sm:mb-0">
-          {filterButtons.map((button) => (
+          {["all", "beach", "mountain", "city", "historic", "cultural"].map((category) => (
             <motion.button
-              key={button.value}
-              onClick={() => setFilter(button.value)}
+              key={category}
+              onClick={() => handleFilterChange(category)}
               className={`px-4 py-2 rounded-full text-sm ${
-                filter === button.value ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"
+                filter === category ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"
               }`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {button.label}
+              {category.charAt(0).toUpperCase() + category.slice(1)}
             </motion.button>
           ))}
         </div>
@@ -103,9 +133,10 @@ export default function DestinationGrid() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
           >
-            {filteredDestinations.map((destination) => (
+            {paginatedDestinations.map((destination) => (
               <motion.div
                 key={destination.id}
+                className="destination-card"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
@@ -134,6 +165,27 @@ export default function DestinationGrid() {
           No destinations found for the selected filter.
         </motion.div>
       )}
+
+      <div className="flex justify-between mt-4">
+        <button
+          onClick={handlePrevPage}
+          disabled={currentPage === 0}
+          className="px-4 py-2 bg-blue-600 text-white rounded-md"
+        >
+          Previous
+        </button>
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage >= totalPages - 1}
+          className="px-4 py-2 bg-blue-600 text-white rounded-md"
+        >
+          Next
+        </button>
+      </div>
+
+      <div className="mt-4 text-center">
+        Page {currentPage + 1} of {totalPages}
+      </div>
     </div>
-  )
+  );
 }

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react"
 import { supabase } from "../../utils/supabase"
 import { SlideAttraction } from "./SlideAttraction"
 import type { Attraction } from "@/types/attraction"
+import { fetchAttraction } from "@/data/api/attraction"
 
 export function AttractionSlide() {
   const [attractions, setAttractions] = useState<Attraction[]>([])
@@ -12,16 +13,16 @@ export function AttractionSlide() {
   useEffect(() => {
     const fetchAttractions = async () => {
       try {
-        const { data, error } = await supabase.from("attraction").select("*")
+        const  data  = await fetchAttraction(26, true)
 
         if (error) {
-          throw new Error(error.message)
+          throw new Error(error)
         }
 
         setAttractions(data)
-      } catch (err) {
+      } catch (error) {
         setError("Failed to fetch attractions. Please try again later.")
-        console.error("Error fetching attractions:", err)
+        console.error("Error fetching attractions:", error)
       } finally {
         setLoading(false)
       }

@@ -82,8 +82,4 @@
 //     rating: 4.8,
 //     reviews: 71800,
 //     price: 15,
-//     duration: '2-3 hours',
-//     category: 'Sightseeing'
-//   },
-// ];
-
+//     duration: '2-3 hours'

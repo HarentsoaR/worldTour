@@ -1,63 +1,69 @@
-"use client"
+"use client";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Search } from "lucide-react";
+import { handleSearch } from "@/data/api/destination";
+import type { Destination } from "@/types/destination";
 
-import type React from "react"
-import { useState, useEffect, useRef } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Search } from "lucide-react"
-import { handleSearch } from "@/data/api/destination"
-import type { Destination } from "@/types/destination"
-
-const videoSources = ["/destination1.mp4", "/destination2.mp4", "/destination3.mp4"]
+const videoSources = ["/destination1.mp4", "/destination2.mp4", "/destination3.mp4"];
 
 interface DestinationsHeroProps {
-  onSearch: (results: Destination[]) => void
+  onSearch: (results: Destination[]) => void;
 }
 
 export default function DestinationsHero({ onSearch }: DestinationsHeroProps) {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [currentVideo, setCurrentVideo] = useState(videoSources[0])
-  const [nextVideo, setNextVideo] = useState("")
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentVideo, setCurrentVideo] = useState(videoSources[0]);
+  const [nextVideo, setNextVideo] = useState("");
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const isMounted = useRef(true); // Track if the component is mounted
 
   useEffect(() => {
     // Set the initial video
-    setCurrentVideo(videoSources[Math.floor(Math.random() * videoSources.length)])
-  }, [])
+    setCurrentVideo(videoSources[Math.floor(Math.random() * videoSources.length)]);
+    return () => {
+      isMounted.current = false; // Cleanup on unmount
+    };
+  }, []);
 
-  useEffect(() => {
-    const video = videoRef.current
-    if (video) {
-      video.play().catch((error) => {
-        console.error("Video playback failed:", error)
-      })
-    }
-  }, [currentVideo])
+  // useEffect(() => {
+  //   const video = videoRef.current;
+  //   if (video) {
+  //     video.play().catch((error) => {
+  //       console.error("Video playback failed:", error);
+  //     });
+  //   }
+  // }, [currentVideo]);
 
   const handleVideoEnd = () => {
-    let nextVideoIndex
+    let nextVideoIndex;
     do {
-      nextVideoIndex = Math.floor(Math.random() * videoSources.length)
-    } while (videoSources[nextVideoIndex] === currentVideo)
+      nextVideoIndex = Math.floor(Math.random() * videoSources.length);
+    } while (videoSources[nextVideoIndex] === currentVideo);
 
-    setNextVideo(videoSources[nextVideoIndex])
-  }
+    setNextVideo(videoSources[nextVideoIndex]);
+  };
 
   const handleNextVideoLoad = () => {
-    setCurrentVideo(nextVideo)
-    setNextVideo("")
-  }
+    if (isMounted.current) {
+      setTimeout(() => {
+        setCurrentVideo(nextVideo);
+        setNextVideo("");
+      }, 100); // Delay to ensure smooth transition
+    }
+  };
 
   const handleSearchSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      const results = await handleSearch(searchQuery)
-      console.log("Search results:", results)
-      onSearch(results)
+      const results = await handleSearch(searchQuery);
+      console.log("Search results:", results);
+      onSearch(results);
     } catch (error) {
-      console.error("Error fetching destinations:", error)
-      onSearch([])
+      console.error("Error fetching destinations:", error);
+      onSearch([]);
     }
-  }
+  };
 
   return (
     <div className="relative w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-screen overflow-hidden">
@@ -117,5 +123,5 @@ export default function DestinationsHero({ onSearch }: DestinationsHeroProps) {
         </form>
       </motion.div>
     </div>
-  )
+  );
 }

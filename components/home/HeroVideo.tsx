@@ -1,42 +1,47 @@
-"use client"
+"use client";
+import React, { useEffect, useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-import React, { useEffect, useState, useRef } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-
-const videoSources = ["/bg-video1.mp4", "/bg-video2.mp4", "/bg-video3.mp4", "/bg-video4.mp4"]
+const videoSources = ["/bg-video1.mp4", "/bg-video2.mp4", "/bg-video3.mp4", "/bg-video4.mp4"];
 
 export function HeroVideo() {
-  const [currentVideo, setCurrentVideo] = useState(videoSources[0])
-  const [nextVideo, setNextVideo] = useState("")
-  const currentVideoRef = useRef<HTMLVideoElement>(null)
+  const [currentVideo, setCurrentVideo] = useState(videoSources[0]);
+  const [nextVideo, setNextVideo] = useState("");
+  const currentVideoRef = useRef<HTMLVideoElement>(null);
+  const isMounted = useRef(true); // Track if the component is mounted
 
   useEffect(() => {
     // Set the initial video
-    setCurrentVideo(videoSources[Math.floor(Math.random() * videoSources.length)])
-  }, [])
+    setCurrentVideo(videoSources[Math.floor(Math.random() * videoSources.length)]);
+    return () => {
+      isMounted.current = false; // Cleanup on unmount
+    };
+  }, []);
 
   useEffect(() => {
-    const video = currentVideoRef.current
+    const video = currentVideoRef.current;
     if (video) {
       video.play().catch((error) => {
-        console.error("Video playback failed:", error)
-      })
+        console.error("Video playback failed:", error);
+      });
     }
-  }, [currentVideo])
+  }, [currentVideo]);
 
   const handleVideoEnd = () => {
-    let nextVideoIndex
+    let nextVideoIndex;
     do {
-      nextVideoIndex = Math.floor(Math.random() * videoSources.length)
-    } while (videoSources[nextVideoIndex] === currentVideo)
+      nextVideoIndex = Math.floor(Math.random() * videoSources.length);
+    } while (videoSources[nextVideoIndex] === currentVideo);
 
-    setNextVideo(videoSources[nextVideoIndex])
-  }
+    setNextVideo(videoSources[nextVideoIndex]);
+  };
 
   const handleNextVideoLoad = () => {
-    setCurrentVideo(nextVideo)
-    setNextVideo("")
-  }
+    if (isMounted.current) {
+      setCurrentVideo(nextVideo);
+      setNextVideo("");
+    }
+  };
 
   return (
     <div className="relative w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-screen overflow-hidden">
@@ -45,6 +50,7 @@ export function HeroVideo() {
           key={currentVideo}
           ref={currentVideoRef}
           autoPlay
+          preload="auto"
           muted
           playsInline
           className="absolute inset-0 w-full h-full object-cover"
@@ -96,7 +102,7 @@ export function HeroVideo() {
         </motion.button>
       </div>
     </div>
-  )
+  );
 }
 
-export default HeroVideo
+export default HeroVideo;

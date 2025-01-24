@@ -6,6 +6,10 @@ import DestinationsHero from "@/components/destinations/DestinationHero"
 import FeaturedDestinations from "@/components/destinations/FeaturedDestination"
 import SearchResults from "@/components/destinations/SearchResults"
 import type { Destination } from "@/types/destination"
+import { gsap, ScrollToPlugin } from "gsap/all"
+
+
+gsap.registerPlugin(ScrollToPlugin)
 
 export default function DestinationsPage() {
   const [searchResults, setSearchResults] = useState<Destination[]>([])
@@ -13,11 +17,14 @@ export default function DestinationsPage() {
   const searchResultsRef = useRef<HTMLDivElement | null>(null)
 
   const handleSearch = (results: Destination[]) => {
+    const position = window.innerHeight / 1
+    gsap.to(window, { scrollTo: { y: position, autoKill: false }, duration: 0.5 })
     setSearchResults(results)
     setIsSearching(true)
   }
 
   const clearSearch = () => {
+    gsap.to(window, { scrollTo: { y: 0, autoKill: false }, duration: 0.5 })
     setSearchResults([])
     setIsSearching(false)
   }
