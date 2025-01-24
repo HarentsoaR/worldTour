@@ -1,14 +1,34 @@
-'use client'
+"use client"
 
-import { motion } from 'framer-motion';
-import AttractionCard from './AttractionCard';
-import { Attraction } from '@/types/attraction';
+import { useState, useEffect } from "react"
+import { motion } from "framer-motion"
+import { AttractionCard } from "./AttractionCard"
+import type { Attraction } from "@/types/attraction"
+import { fetchAttraction } from "@/data/api/attraction"
 
-interface FeaturedAttractionsProps {
-  attractions: Attraction[];
-}
+export default function FeaturedAttractions() {
+  const [attractions, setAttractions] = useState<Attraction[]>([])
+  const [loading, setLoading] = useState(true)
 
-export default function FeaturedAttractions({ attractions }: FeaturedAttractionsProps) {
+  useEffect(() => {
+    const loadAttractions = async () => {
+      try {
+        const data = await fetchAttraction(4, true)
+        setAttractions(data)
+      } catch (error) {
+        console.error("Failed to load attractions:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadAttractions()
+  }, [])
+
+  if (loading) {
+    return <div className="text-center py-10">Loading featured attractions...</div>
+  }
+
   return (
     <section className="mb-12">
       <h2 className="text-3xl font-bold mb-6">Featured Attractions</h2>
@@ -25,6 +45,6 @@ export default function FeaturedAttractions({ attractions }: FeaturedAttractions
         ))}
       </div>
     </section>
-  );
+  )
 }
 

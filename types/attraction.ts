@@ -1,14 +1,10 @@
 export interface Attraction {
-    id: number;
-    name: string;
-    location: string;
-    description: string;
-    image: string;
-    rating: number;
-    reviews: number;
-    price: number;
-    duration: string;
-    category: string;
-  }
-  
-  
+  id: number;                  // Unique identifier for the attraction
+  name: string;                // Name of the attraction
+  country: string;             // Country where the attraction is located
+  description: string;         // Description of the attraction
+  imageurl: string;            // URL of the image representing the attraction
+  category: string;            // Category of the attraction (e.g., Historical, Natural, Cultural)
+  opening_hours: string;       // Opening hours of the attraction
+  entry_fee: number;           // Entry fee for the attraction (if applicable)
+};

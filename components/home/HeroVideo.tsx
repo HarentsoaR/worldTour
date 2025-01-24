@@ -9,9 +9,9 @@ export function HeroVideo() {
   const [currentVideo, setCurrentVideo] = useState(videoSources[0])
   const [nextVideo, setNextVideo] = useState("")
   const currentVideoRef = useRef<HTMLVideoElement>(null)
-  const nextVideoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
+    // Set the initial video
     setCurrentVideo(videoSources[Math.floor(Math.random() * videoSources.length)])
   }, [])
 
@@ -59,7 +59,12 @@ export function HeroVideo() {
         </motion.video>
       </AnimatePresence>
       {nextVideo && (
-        <video ref={nextVideoRef} muted playsInline className="hidden" onLoadedData={handleNextVideoLoad}>
+        <video
+          muted
+          playsInline
+          className="hidden"
+          onLoadedData={handleNextVideoLoad}
+        >
           <source src={nextVideo} type="video/mp4" />
         </video>
       )}
@@ -95,4 +100,3 @@ export function HeroVideo() {
 }
 
 export default HeroVideo
-

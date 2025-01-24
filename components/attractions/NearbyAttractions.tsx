@@ -1,14 +1,34 @@
-'use client'
+"use client"
 
-import { motion } from 'framer-motion';
-import AttractionCard from './AttractionCard';
-import { Attraction } from '@/types/attraction';
+import { useState, useEffect } from "react"
+import { motion } from "framer-motion"
+import { AttractionCard } from "./AttractionCard"
+import type { Attraction } from "@/types/attraction"
+import { fetchAttraction } from "@/data/api/attraction"
 
-interface NearbyAttractionsProps {
-  attractions: Attraction[];
-}
+export default function NearbyAttractions() {
+  const [attractions, setAttractions] = useState<Attraction[]>([])
+  const [loading, setLoading] = useState(true)
 
-export default function NearbyAttractions({ attractions }: NearbyAttractionsProps) {
+  useEffect(() => {
+    const loadAttractions = async () => {
+      try {
+        const data = await fetchAttraction(3, true) // Fetch 3 random attractions
+        setAttractions(data)
+      } catch (error) {
+        console.error("Failed to load nearby attractions:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadAttractions()
+  }, [])
+
+  if (loading) {
+    return <div className="text-center py-10">Loading nearby attractions...</div>
+  }
+
   return (
     <section className="mb-12">
       <h2 className="text-3xl font-bold mb-6">Nearby Attractions</h2>
@@ -25,6 +45,6 @@ export default function NearbyAttractions({ attractions }: NearbyAttractionsProp
         ))}
       </div>
     </section>
-  );
+  )
 }
 

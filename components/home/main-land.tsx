@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { HeroVideo } from '@/components/home/HeroVideo';
-import { DestinationSlide } from '@/components/home/DestinationSlide';
+import { AttractionSlide } from '@/components/home/AttractionSlide';
 import { HotelSlide } from '@/components/home/HotelSlide';
 import { TestimonialSection } from '@/components/home/TestimonialSection';
 import { FeaturedTourPackages } from '@/components/home/FeaturedTourPackages';
@@ -18,7 +18,7 @@ export default function MainLand() {
           <VirtualTour360 />
         </section>
         <section className="py-12 sm:py-16 lg:py-20">
-          <DestinationSlide />
+          <AttractionSlide />
         </section>
         <section className="py-12 sm:py-16 lg:py-20">
           <HotelSlide />
