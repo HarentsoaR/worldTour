@@ -35,7 +35,7 @@ export function AttractionCard({ attraction, tours }: AttractionCardProps) {
                 <span className="text-sm font-semibold">${tour.price_per_person}</span>
                 <span className="text-sm text-gray-500">
                   <Users className="w-4 h-4 inline mr-1" />
-                  {tour.available_spots} left
+                  {tour.avalaible_spots} left
                 </span>
               </div>
             ))}
