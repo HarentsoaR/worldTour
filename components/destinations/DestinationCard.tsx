@@ -9,6 +9,7 @@ import React from "react";
 
 interface DestinationCardProps {
   destination: Destination;
+  onExplore: (destination: Destination) => void; // New prop for handling explore action
 }
 
 const typeIcons = {
@@ -21,7 +22,7 @@ const typeIcons = {
 
 const DefaultIcon = Building;
 
-export default function DestinationCard({ destination }: DestinationCardProps) {
+export default function DestinationCard({ destination, onExplore }: DestinationCardProps) {
   const TypeIcon = typeIcons[destination.type] || DefaultIcon;
   const [loading, setLoading] = React.useState(true); // State to manage loading status
 
@@ -67,6 +68,7 @@ export default function DestinationCard({ destination }: DestinationCardProps) {
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
+          onClick={() => onExplore(destination)} // Call the onExplore function with the destination
         >
           Explore
         </motion.button>

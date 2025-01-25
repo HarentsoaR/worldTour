@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import DestinationCard from "./DestinationCard";
+import DestinationModal from "./DestinationModal"; // Import the modal component
 import type { Destination } from "@/types/destination";
 import { fetchDestinations } from "@/data/api/destination";
 import { Loader } from "@/components/ui/loader";
@@ -17,6 +18,8 @@ export default function DestinationGrid() {
   const [view, setView] = useState("grid");
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
+  const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const ITEMS_PER_PAGE = 6;
 
   useEffect(() => {
@@ -64,6 +67,16 @@ export default function DestinationGrid() {
     gsap.to(window, { scrollTo: { y: position, autoKill: false }, duration: 0.5 }); // Scroll to top
   };
 
+  const handleExplore = (destination: Destination) => {
+    setSelectedDestination(destination);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedDestination(null);
+  };
+
   const paginatedDestinations = filteredDestinations.slice(
     currentPage * ITEMS_PER_PAGE,
     (currentPage + 1) * ITEMS_PER_PAGE
@@ -80,7 +93,7 @@ export default function DestinationGrid() {
   return (
     <div className="mt-12">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
-        <div className="flex flex-wrap gap-2 mb-4 sm:mb-0">
+        <div className="flex gap-2 mb-4 sm:mb-0">
           {["all", "beach", "mountain", "city", "historic", "cultural"].map((category) => (
             <motion.button
               key={category}
@@ -142,7 +155,7 @@ export default function DestinationGrid() {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
               >
-                <DestinationCard destination={destination} />
+                <DestinationCard destination={destination} onExplore={handleExplore} />
               </motion.div>
             ))}
           </motion.div>
@@ -186,6 +199,13 @@ export default function DestinationGrid() {
       <div className="mt-4 text-center">
         Page {currentPage + 1} of {totalPages}
       </div>
+
+      {/* Modal for exploring destination */}
+      <DestinationModal
+        destination={selectedDestination}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 }
