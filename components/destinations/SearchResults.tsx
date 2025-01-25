@@ -1,23 +1,36 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import type { Destination } from "@/types/destination"
-import DestinationCard from "./DestinationCard"
-import { motion, AnimatePresence } from "framer-motion"
+import { useState, useEffect } from "react";
+import type { Destination } from "@/types/destination";
+import DestinationCard from "./DestinationCard";
+import DestinationModal from "./DestinationModal"; // Import the modal
+import { motion, AnimatePresence } from "framer-motion";
 
 interface SearchResultsProps {
-  results: Destination[]
-  onClearSearch: () => void
+  results: Destination[];
+  onClearSearch: () => void;
 }
 
 export default function SearchResults({ results, onClearSearch }: SearchResultsProps) {
-  const [mounted, setMounted] = useState(false)
+  const [mounted, setMounted] = useState(false);
+  const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null); // State for the selected destination
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
-  if (!mounted) return null
+  if (!mounted) return null;
+
+  const handleExplore = (destination: Destination) => {
+    setSelectedDestination(destination); // Set the selected destination
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Close the modal
+    setSelectedDestination(null); // Reset the selected destination
+  };
 
   return (
     <div className="mt-8">
@@ -61,14 +74,23 @@ export default function SearchResults({ results, onClearSearch }: SearchResultsP
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <DestinationCard destination={destination} />
+                  <DestinationCard 
+                    destination={destination} 
+                    onExplore={handleExplore} // Pass the handleExplore function
+                  />
                 </motion.div>
               ))}
             </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
-  )
-}
 
+      {/* Render the modal */}
+      <DestinationModal 
+        destination={selectedDestination} 
+        isOpen={isModalOpen} 
+        onClose={handleCloseModal} 
+      />
+    </div>
+  );
+}
