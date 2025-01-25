@@ -8,3 +8,14 @@ export interface Attraction {
   opening_hours: string;       // Opening hours of the attraction
   entry_fee: number;           // Entry fee for the attraction (if applicable)
 };
+
+export interface TourReservation {
+  id: number
+  attraction_id: number
+  tour_date: string
+  start_time: string
+  end_time: string
+  avalaible_spots: number
+  nb_guest: number
+  price_per_person: number
+};
