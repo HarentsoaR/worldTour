@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import MainLand from "@/components/home/main-land"
 import InitialLoadingWrapper from "@/components/InitialLoadingWrapper"
-import { LoadingPage } from "@/components/LoadingPage"
+import { LoadingHome } from "@/components/LoadingHome"
 
 export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true)
@@ -16,6 +16,9 @@ export default function HomePage() {
     return () => clearTimeout(timer)
   }, [])
 
-  return <InitialLoadingWrapper>{isLoading ? <LoadingPage /> : <MainLand />}</InitialLoadingWrapper>
+  return (
+    <InitialLoadingWrapper>
+      {isLoading ? <LoadingHome /> : <MainLand />}
+    </InitialLoadingWrapper>
+  )
 }
-

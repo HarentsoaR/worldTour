@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react"
 import { LoaderH } from "./ui/loading/loaderH"
 import { gsap } from "gsap"
 
-export function LoadingPage() {
+export function LoadingHome() {
   const [loadingProgress, setLoadingProgress] = useState(0)
 
   useEffect(() => {
