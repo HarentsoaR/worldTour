@@ -5,7 +5,7 @@ import type { Destination } from "@/types/destination"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { fetchDestinations } from "@/data/api/destination"
-import { Loader } from "@/components/ui/loader"
+import { LoaderContent } from "@/components/ui/loading/loaderContent"
 
 export default function FeaturedDestinations() {
   const [destinations, setDestinations] = useState<Destination[]>([])
@@ -29,7 +29,7 @@ export default function FeaturedDestinations() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <Loader className="w-12 h-12 text-blue-600" />
+        <LoaderContent className="w-12 h-12 text-blue-600" />
       </div>
     )
   }

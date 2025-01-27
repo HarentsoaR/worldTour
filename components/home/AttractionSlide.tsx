@@ -1,6 +1,5 @@
 "use client"
 import React, { useState, useEffect } from "react"
-import { supabase } from "../../utils/supabase"
 import { SlideAttraction } from "./SlideAttraction"
 import type { Attraction } from "@/types/attraction"
 import { fetchAttraction } from "@/data/api/attraction"
@@ -13,12 +12,7 @@ export function AttractionSlide() {
   useEffect(() => {
     const fetchAttractions = async () => {
       try {
-        const  data  = await fetchAttraction(26, true)
-
-        if (error) {
-          throw new Error(error)
-        }
-
+        const data = await fetchAttraction(26, true)
         setAttractions(data)
       } catch (error) {
         setError("Failed to fetch attractions. Please try again later.")
@@ -32,11 +26,11 @@ export function AttractionSlide() {
   }, [])
 
   if (loading) {
-    return <div className="text-center py-10">Loading attractions...</div>
+    return <div className="text-center py-10 text-gray-600 dark:text-gray-300">Loading attractions...</div>
   }
 
   if (error) {
-    return <div className="text-center py-10 text-red-600">{error}</div>
+    return <div className="text-center py-10 text-red-600 dark:text-red-400">{error}</div>
   }
 
   return <SlideAttraction items={attractions} title="Popular Attractions" />

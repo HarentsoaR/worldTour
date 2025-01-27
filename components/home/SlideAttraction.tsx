@@ -1,52 +1,54 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import { ChevronLeft, ChevronRight, MapPin, Clock, DollarSign, Tag } from "lucide-react";
-import { Loader } from "../ui/loader";
-import type { Attraction } from "@/types/attraction";
-import { motion, AnimatePresence } from "framer-motion";
+"use client"
+import React, { useState, useEffect } from "react"
+import Image from "next/image"
+import { ChevronLeft, ChevronRight, MapPin, Clock, DollarSign, Tag } from "lucide-react"
+import { Loader } from "../ui/loading/loader"
+import type { Attraction } from "@/types/attraction"
+import { motion, AnimatePresence } from "framer-motion"
 
 interface SlideProps {
-  items: Attraction[];
-  title: string;
+  items: Attraction[]
+  title: string
 }
 
 export function SlideAttraction({ items, title }: SlideProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    const timer = setTimeout(() => setLoading(false), 1000)
+    return () => clearTimeout(timer)
+  }, [])
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
-    }, 5000);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length)
+    }, 5000)
 
-    return () => clearInterval(timer);
-  }, [items.length]);
+    return () => clearInterval(timer)
+  }, [items.length])
 
   const goToSlide = (index: number) => {
-    setCurrentIndex(index);
-  };
+    setCurrentIndex(index)
+  }
 
   const goToPrevious = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + items.length) % items.length);
-  };
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + items.length) % items.length)
+  }
 
   const goToNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
-  };
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length)
+  }
 
   return (
-    <div className="relative w-full max-w-6xl mx-auto overflow-hidden bg-gray-100 rounded-xl shadow-lg">
-      <h2 className="text-2xl md:text-3xl font-bold text-center my-4 md:my-6 text-gray-800">{title}</h2>
+    <div className="relative w-full max-w-6xl mx-auto overflow-hidden bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+      <h2 className="text-2xl md:text-3xl font-bold text-center my-4 md:my-6 text-gray-800 dark:text-gray-200">
+        {title}
+      </h2>
       <div className="relative h-[400px] md:h-[500px] lg:h-[600px]">
         {loading ? (
           <div className="flex items-center justify-center h-full">
-            <Loader className="h-10 w-10 text-gray-800" />
+            <Loader className="h-10 w-10 text-gray-800 dark:text-gray-200" />
           </div>
         ) : (
           <AnimatePresence mode="wait">
@@ -97,17 +99,17 @@ export function SlideAttraction({ items, title }: SlideProps) {
       </div>
       <button
         onClick={goToPrevious}
-        className="absolute top-1/2 left-2 md:left-4 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-1 md:p-2 hover:bg-opacity-75 transition-all"
+        className="absolute top-1/2 left-2 md:left-4 transform -translate-y-1/2 bg-white dark:bg-gray-800 bg-opacity-50 dark:bg-opacity-50 rounded-full p-1 md:p-2 hover:bg-opacity-75 dark:hover:bg-opacity-75 transition-all"
         aria-label="Previous slide"
       >
-        <ChevronLeft className="h-4 w-4 md:h-6 md:w-6 text-gray-800" />
+        <ChevronLeft className="h-4 w-4 md:h-6 md:w-6 text-gray-800 dark:text-gray-200" />
       </button>
       <button
         onClick={goToNext}
-        className="absolute top-1/2 right-2 md:right-4 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-1 md:p-2 hover:bg-opacity-75 transition-all"
+        className="absolute top-1/2 right-2 md:right-4 transform -translate-y-1/2 bg-white dark:bg-gray-800 bg-opacity-50 dark:bg-opacity-50 rounded-full p-1 md:p-2 hover:bg-opacity-75 dark:hover:bg-opacity-75 transition-all"
         aria-label="Next slide"
       >
-        <ChevronRight className="h-4 w-4 md:h-6 md:w-6 text-gray-800" />
+        <ChevronRight className="h-4 w-4 md:h-6 md:w-6 text-gray-800 dark:text-gray-200" />
       </button>
       <div className="hidden lg:block absolute bottom-4 left-1/2 transform -translate-x-1/2 space-x-2">
         {items.map((_, index) => (
@@ -122,5 +124,6 @@ export function SlideAttraction({ items, title }: SlideProps) {
         ))}
       </div>
     </div>
-  );
+  )
 }
+

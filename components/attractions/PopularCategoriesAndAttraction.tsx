@@ -6,7 +6,7 @@ import { Camera, Utensils, Tent, Ticket, Palmtree, Building, type LucideIcon } f
 import { fetchAttractions } from "@/data/api/attraction";
 import type { Attraction } from "@/types/attraction";
 import { AttractionCard } from "./AttractionCard";
-import { Loader } from "@/components/ui/loader"; // Adjust the import based on your loader's path
+import { LoaderContent } from "@/components/ui/loading/loaderContent"; // Adjust the import based on your LoaderContent's path
 import { gsap, ScrollToPlugin } from "gsap/all";
 
 gsap.registerPlugin(ScrollToPlugin);
@@ -104,7 +104,7 @@ export default function PopularCategoriesAndAttractions() {
   if (loading) {
     return (
       <div className="text-center py-10">
-        <Loader className="w-12 h-12 text-blue-600" />
+        <LoaderContent className="w-12 h-12 text-blue-600" />
       </div>
     );
   }

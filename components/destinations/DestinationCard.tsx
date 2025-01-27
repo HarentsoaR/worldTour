@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { MapPin, Star, Waves, Mountain, Building, Landmark, Users } from "lucide-react";
 import type { Destination } from "@/types/destination";
-import { Loader } from "@/components/ui/loader"; // Adjust the import based on your loader's path
+import { Loader } from "@/components/ui/loading/loader"; // Adjust the import based on your loader's path
 import React from "react";
 
 interface DestinationCardProps {
@@ -34,8 +34,8 @@ export default function DestinationCard({ destination, onExplore }: DestinationC
     >
       <div className="relative h-48 sm:h-56 md:h-64">
         {loading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white">
-            <Loader className="w-8 h-8 text-blue-600" /> {/* Loader component */}
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+            <Loader className="w-8 h-8 text-blue-600" />
           </div>
         )}
         <Image

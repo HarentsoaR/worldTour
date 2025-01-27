@@ -5,16 +5,25 @@ import DestinationGrid from "@/components/destinations/DestinationGrid"
 import DestinationsHero from "@/components/destinations/DestinationHero"
 import FeaturedDestinations from "@/components/destinations/FeaturedDestination"
 import SearchResults from "@/components/destinations/SearchResults"
+import { LoadingPage } from "@/components/LoadingPage"
 import type { Destination } from "@/types/destination"
 import { gsap, ScrollToPlugin } from "gsap/all"
-
 
 gsap.registerPlugin(ScrollToPlugin)
 
 export default function DestinationsPage() {
   const [searchResults, setSearchResults] = useState<Destination[]>([])
   const [isSearching, setIsSearching] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const searchResultsRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 2000) // Adjust this time as needed
+
+    return () => clearTimeout(timer)
+  }, [])
 
   const handleSearch = (results: Destination[]) => {
     const position = window.innerHeight / 1
@@ -29,12 +38,15 @@ export default function DestinationsPage() {
     setIsSearching(false)
   }
 
-  // Scroll to search results when they are updated
   useEffect(() => {
     if (isSearching && searchResultsRef.current) {
       searchResultsRef.current.scrollIntoView({ behavior: "smooth", block: "start" })
     }
-  }, [isSearching, searchResults])
+  }, [isSearching])
+
+  if (isLoading) {
+    return <LoadingPage loadingMessage="Loading Destinations..." />
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">

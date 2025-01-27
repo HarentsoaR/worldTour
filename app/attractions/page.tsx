@@ -9,6 +9,7 @@ import FeaturedAttractions from "@/components/attractions/FeaturedAttractions"
 import NearbyAttractions from "@/components/attractions/NearbyAttractions"
 import PopularCategoriesAndAttractions from "@/components/attractions/PopularCategoriesAndAttraction"
 import SearchResults from "@/components/attractions/SearchResults"
+import { LoadingPage } from "@/components/LoadingPage"
 import type { Attraction, TourReservation } from "@/types/attraction"
 
 gsap.registerPlugin(ScrollToPlugin)
@@ -16,7 +17,16 @@ gsap.registerPlugin(ScrollToPlugin)
 export default function AttractionsPage() {
   const [searchResults, setSearchResults] = useState<(Attraction & { tours: TourReservation[] })[]>([])
   const [isSearching, setIsSearching] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const searchResultsRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 2000) // Adjust this time as needed
+
+    return () => clearTimeout(timer)
+  }, [])
 
   const handleSearch = (results: (Attraction & { tours: TourReservation[] })[]) => {
     console.log("Search results in AttractionsPage:", results)
@@ -40,6 +50,10 @@ export default function AttractionsPage() {
     }
   }, [isSearching])
 
+  if (isLoading) {
+    return <LoadingPage loadingMessage="Loading Attractions..." />
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <AttractionsHero />
@@ -60,4 +74,3 @@ export default function AttractionsPage() {
     </div>
   )
 }
-

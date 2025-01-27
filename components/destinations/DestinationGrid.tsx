@@ -6,7 +6,7 @@ import DestinationCard from "./DestinationCard";
 import DestinationModal from "./DestinationModal"; // Import the modal component
 import type { Destination } from "@/types/destination";
 import { fetchDestinations } from "@/data/api/destination";
-import { Loader } from "@/components/ui/loader";
+import { LoaderContent } from "@/components/ui/loading/loaderContent";
 import { gsap, ScrollToPlugin } from "gsap/all";
 
 // Register the plugin
@@ -84,8 +84,8 @@ export default function DestinationGrid() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <Loader className="w-12 h-12 text-blue-600" />
+      <div className="h-screen flex items-center justify-center">
+        <LoaderContent size={60} color="#3B82F6" speed={2} />
       </div>
     );
   }
